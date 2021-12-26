@@ -1,46 +1,32 @@
 package com.dicoding.tourismapp.core.data.source.remote
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.dicoding.tourismapp.core.data.source.remote.network.ApiResponse
+import com.dicoding.tourismapp.core.data.source.remote.network.ApiService
 import com.dicoding.tourismapp.core.data.source.remote.response.TourismResponse
-import com.dicoding.tourismapp.core.utils.JsonHelper
-import org.json.JSONException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
-class RemoteDataSource private constructor(private val jsonHelper: JsonHelper) {
-    companion object {
-        @Volatile
-        private var instance: RemoteDataSource? = null
+class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
 
-        fun getInstance(helper: JsonHelper): RemoteDataSource =
-            instance ?: synchronized(this) {
-                instance ?: RemoteDataSource(helper)
-            }
-    }
-
-    fun getAllTourism(): LiveData<ApiResponse<List<TourismResponse>>> {
-        val resultData = MutableLiveData<ApiResponse<List<TourismResponse>>>()
-
-        //get data from local json
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
+    fun getAllTourism(): Flow<ApiResponse<List<TourismResponse>>> {
+        // get data from remote api
+        return flow {
             try {
-                val dataArray = jsonHelper.loadData()
+                val response = apiService.getList()
+                val dataArray = response.places
                 if (dataArray.isNotEmpty()) {
-                    resultData.value = ApiResponse.Success(dataArray)
+                    emit(ApiResponse.Success(response.places))
                 } else {
-                    resultData.value = ApiResponse.Empty
+                    emit(ApiResponse.Empty)
                 }
-            } catch (e: JSONException){
-                resultData.value = ApiResponse.Error(e.toString())
-                Log.e("RemoteDataSource", e.toString())
-            }
-        }, 2000)
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
 
-        return resultData
+            }
+        }.flowOn(Dispatchers.IO)
     }
 }
 

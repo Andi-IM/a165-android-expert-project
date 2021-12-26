@@ -6,7 +6,7 @@ import com.dicoding.tourismapp.core.data.source.remote.response.TourismResponse
 import org.json.JSONObject
 import java.io.IOException
 
-class JsonHelper(private val context: Context) {
+class ApiService(private val context: Context) {
 
     private fun parsingFileToString(): String? {
         val jsonString: String

@@ -1,25 +1,18 @@
 package com.dicoding.tourismapp.core.data.source.local
 
-import androidx.lifecycle.LiveData
 import com.dicoding.tourismapp.core.data.source.local.entity.TourismEntity
 import com.dicoding.tourismapp.core.data.source.local.room.TourismDao
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalDataSource private constructor(private val tourismDao: TourismDao) {
+class LocalDataSource @Inject constructor(private val tourismDao: TourismDao) {
 
-    companion object {
-        private var instance: LocalDataSource? = null
+    fun getAllTourism(): Flow<List<TourismEntity>> = tourismDao.getAllTourism()
 
-        fun getInstance(tourismDao: TourismDao): LocalDataSource =
-            instance ?: synchronized(this) {
-                instance ?: LocalDataSource(tourismDao)
-            }
-    }
+    fun getFavoriteTourism(): Flow<List<TourismEntity>> = tourismDao.getFavoriteTourism()
 
-    fun getAllTourism(): LiveData<List<TourismEntity>> = tourismDao.getAllTourism()
-
-    fun getFavoriteTourism(): LiveData<List<TourismEntity>> = tourismDao.getFavoriteTourism()
-
-    fun insertTourism(tourismList: List<TourismEntity>) = tourismDao.insertTourism(tourismList)
+    suspend fun insertTourism(tourismList: List<TourismEntity>) =
+        tourismDao.insertTourism(tourismList)
 
     fun setFavoriteTourism(tourism: TourismEntity, newState: Boolean) {
         tourism.isFavorite = newState
