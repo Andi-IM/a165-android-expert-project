@@ -15,7 +15,6 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true"
             android:theme="@style/Theme.TourismApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +25,6 @@
 
         <activity
             android:name=".detail.DetailTourismActivity"
-            android:exported="true"
             android:label="@string/title_activity_detail_home"
             android:theme="@style/Theme.TourismApp.NoActionBar" />
     </application>

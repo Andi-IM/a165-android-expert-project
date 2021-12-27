@@ -5,35 +5,30 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.dicoding.tourismapp.MyApplication
 import com.dicoding.tourismapp.R
-import com.dicoding.tourismapp.core.ui.ViewModelFactory
+import com.dicoding.tourismapp.core.domain.model.Tourism
 import com.dicoding.tourismapp.databinding.ActivityDetailTourismBinding
-import com.dicoding.tourismapp.domain.model.Tourism
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailTourismActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DATA = "extra_data"
     }
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-
-    private val detailTourismViewModel: DetailTourismViewModel by viewModels {
-        factory
-    }
-
     private lateinit var binding: ActivityDetailTourismBinding
 
+    private val detailTourismViewModel: DetailTourismViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MyApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityDetailTourismBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+//        hapus kode berikut
+//        val factory = ViewModelFactory.getInstance(this)
+//        detailTourismViewModel = ViewModelProvider(this, factory)[DetailTourismViewModel::class.java]
 
         val detailTourism = intent.getParcelableExtra<Tourism>(EXTRA_DATA)
         showDetailTourism(detailTourism)
