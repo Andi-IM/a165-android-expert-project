@@ -1,8 +1,8 @@
 package com.dicoding.tourismapp.core.utils
 
-import com.dicoding.tourismapp.domain.model.Tourism
-import com.dicoding.tourismapp.domain.repository.ITourismRepository
-import com.dicoding.tourismapp.domain.usecase.TourismUseCase
+import com.dicoding.tourismapp.core.domain.model.Tourism
+import com.dicoding.tourismapp.core.domain.repository.ITourismRepository
+import com.dicoding.tourismapp.core.domain.usecase.TourismUseCase
 import javax.inject.Inject
 
 class TourismInteractor @Inject constructor(private val tourismRepository: ITourismRepository) :
